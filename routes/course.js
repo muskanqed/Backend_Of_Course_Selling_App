@@ -1,15 +1,15 @@
 const express = require("express");
 const Router = express.Router;
 
-const courseRoute = Router();
-courseRoute.post("/courses/purchase", (req, res) => {
+const courseRouter = Router();
+courseRouter.post("/purchase", (req, res) => {
 
 });
 
-courseRoute.get("/courses", (req, res) => {
+courseRouter.get("/preview", (req, res) => {
 
 });
 
 module.exports = {
-    courseRoute
+    courseRouter
 }

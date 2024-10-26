@@ -2,14 +2,18 @@ const express = require("express");
 const Router = express.Router;
 // const {Router} = require("express");
 
-const userRoute = Router();
+const userRouter = Router();
 
-userRoute.post("/user/signup", (req, res) => {});
+userRouter.post("/signup", (req, res) => {
+    res.json({
+        message: "Hey"
+    })
+});
 
-userRoute.post("/user/signin", (req, res) => {});
+userRouter.post("/signin", (req, res) => { });
 
-userRoute.get("/user/purchases", (req, res) => {});
+userRouter.get("/purchases", (req, res) => { });
 
 module.exports = {
-  userRoute,
+    userRouter,
 };
