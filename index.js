@@ -13,15 +13,15 @@ app.use("/couser", courseRouter);
 
 
 async function main() {
-    if (connectToDb() === true) {
+    try {
+        await connectToDb();
         app.listen(3000, () => {
-            console.log(`serving running on port 3000`);
+            console.log(`Server listening on port 3000`);
         });
+    } catch (error) {
+        console.error(`Failed to connect to the database: ${error.message}`);
+        process.exit(1);
     }
-    else {
-        return;
-    }
-
 }
 
 main();
