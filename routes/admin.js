@@ -44,17 +44,17 @@ adminRouter.post("/signin", async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await adminModel.findOne({
+        const admin = await adminModel.findOne({
             email,
         });
 
-        if (!user) {
+        if (!admin) {
             return res.json({
                 message: "User not found",
             });
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
+        const passwordMatch = await bcrypt.compare(password, admin.password);
 
         if (!passwordMatch) {
             return res.status(401).json({
@@ -62,7 +62,7 @@ adminRouter.post("/signin", async (req, res) => {
             });
         }
 
-        const { firstName, lastName } = user;
+        const { firstName, lastName } = admin;
 
         return res.json({
             firstName,
