@@ -5,11 +5,12 @@ const { courseRouter } = require("./routes/course");
 const { connectToDb } = require("./dbConnect");
 
 const app = express();
-
-
+app.use(express.json());
 app.use("/user", userRouter);
 app.use("/admin", adminRouter);
 app.use("/couser", courseRouter);
+
+
 
 
 async function main() {

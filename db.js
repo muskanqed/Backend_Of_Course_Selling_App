@@ -1,43 +1,43 @@
 const mongoose = require("mongoose");
 
-
 const Schema = mongoose.Schema;
+const ObjectId = mongoose.Types.ObjectId;
 
-const ObjectId = Schema.ObjectId;
-
-const User = new Schema({
-    username: String,
+const userSchema = new Schema({
     email: { type: String, unique: true },
-    password: String
+    password: String,
+    firstName: String,
+    lastName: String,
 });
 
-const Admin = new Schema({
-    name: String,
-    email: String,
-    password: String
+const adminSchema = new Schema({
+    email: { type: String, unique: true },
+    password: String,
+    firstName: String,
+    lastName: String,
 });
 
-const Course = new Schema({
+const courseSchema = new Schema({
     title: String,
     description: String,
     price: Number,
-    adminid: ObjectId
+    imageUrl: String,
+    creatorId: ObjectId
 });
 
-const Purchases = new Schema({
-    purchaseid: ObjectId,
-    courseid: ObjectId,
-    userid: ObjectId
+const purchaseSchema = new Schema({
+    userId: ObjectId,
+    courseId: ObjectId
 });
 
-const UserModel = mongoose.model('user', User);
-const AdminModel = mongoose.model('admin', Admin);
-const CourseModel = mongoose.model('couser', Course);
-const PurchasesModel = mongoose.model('purchases', Purchases);
+const userModel = mongoose.model("user", userSchema);
+const adminModel = mongoose.model("admin", adminSchema);
+const courseModel = mongoose.model("course", courseSchema);
+const purchaseModel = mongoose.model("purchase", purchaseSchema);
 
 module.exports = {
-    UserModel,
-    AdminModel,
-    CourseModel,
-    PurchasesModel
+    userModel,
+    adminModel,
+    courseModel,
+    purchaseModel
 }

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const url = ("mongodb://localhost:27017/Couser-Selling-App");
+const url = ("mongodb://localhost:27017/muskan");
 
 async function connectToDb() {
     await mongoose.connect(url, {
