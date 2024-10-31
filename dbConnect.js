@@ -1,6 +1,7 @@
+require('dotenv').config();
 const mongoose = require("mongoose");
 
-const url = ("mongodb://localhost:27017/couser-app");
+const url = (process.env.MONGO_URL);
 
 async function connectToDb() {
     await mongoose.connect(url, {
