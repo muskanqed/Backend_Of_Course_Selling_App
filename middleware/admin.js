@@ -7,7 +7,7 @@ function adminMiddleware(req, res, next) {
     const decoded = jwt.verify(token, JWT_ADMIN_PASSWORD);
 
     if (decoded) {
-        req.admin = decode._id // req is for accessing that particular adminid
+        req.adminid = decoded.id // req is for accessing that particular adminid
         next();
     }
     else {

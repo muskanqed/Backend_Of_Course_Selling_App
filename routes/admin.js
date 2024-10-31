@@ -2,7 +2,7 @@ const Router = require("express");
 const zod = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { adminModel } = require("../db");
+const { adminModel, courseModel } = require("../db");
 const { JWT_ADMIN_PASSWORD } = require("../config");
 const { adminMiddleware } = require('../middleware/admin');
 
@@ -86,9 +86,41 @@ adminRouter.post("/signin", async (req, res) => {
     }
 });
 
-adminRouter.post("/couser", adminMiddleware, (req, res) => { });
+adminRouter.post("/couser", adminMiddleware, async (req, res) => {
+    const adminId = req.adminid;
 
-adminRouter.put("/couser", (req, res) => { });
+    const { title, description, imageUrl, price } = req.body;
+
+    try {
+        const existingCourse = await courseModel.findOne({ title });
+
+        if (existingCourse) {
+            return res.status(400).json({
+                message: "A course with this title already exists."
+            });
+        }
+
+        const course = await courseModel.create({
+            title,
+            description,
+            imageUrl,
+            price,
+            creatorId: adminId
+        });
+
+        res.status(201).json({
+            message: "Course created successfully",
+            courseId: course._id
+        });
+
+    } catch (error) {
+        console.error("Error creating course:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+
+});
+
+adminRouter.put("/couser", adminMiddleware, (req, res) => { });
 
 adminRouter.get("/couser", (req, res) => { });
 
