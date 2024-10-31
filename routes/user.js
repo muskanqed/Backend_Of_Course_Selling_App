@@ -1,7 +1,10 @@
 const express = require("express");
 const zod = require("zod");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { userModel } = require("../db");
+const { JWT_USER_PASSWORD } = require("../config");
+
 
 const Router = express.Router;
 // const {Router} = require("express");
@@ -73,9 +76,14 @@ userRouter.post("/signin", async (req, res) => {
 
         const { firstName, lastName } = user;
 
+        const token = jwt.sign({
+            id: user._id
+        }, JWT_USER_PASSWORD)
+
         return res.json({
             firstName,
             lastName,
+            token,
             message: "Signin successful",
         });
     } catch (error) {

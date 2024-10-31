@@ -1,7 +1,10 @@
 const Router = require("express");
 const zod = require("zod");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { adminModel } = require("../db");
+const { JWT_ADMIN_PASSWORD } = require("../config");
+const { adminMiddleware } = require('../middleware/admin');
 
 const adminRouter = Router();
 
@@ -64,9 +67,15 @@ adminRouter.post("/signin", async (req, res) => {
 
         const { firstName, lastName } = admin;
 
+        const token = jwt.sign({
+            id: admin._id
+        }, JWT_ADMIN_PASSWORD);
+
+
         return res.json({
             firstName,
             lastName,
+            token,
             message: "Signin successful",
         });
     } catch (error) {
@@ -77,7 +86,7 @@ adminRouter.post("/signin", async (req, res) => {
     }
 });
 
-adminRouter.post("/couser", (req, res) => { });
+adminRouter.post("/couser", adminMiddleware, (req, res) => { });
 
 adminRouter.put("/couser", (req, res) => { });
 
