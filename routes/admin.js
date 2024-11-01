@@ -92,10 +92,10 @@ adminRouter.post("/couser", adminMiddleware, async (req, res) => {
     const { title, description, imageUrl, price } = req.body;
 
     try {
-        const existingCourse = await courseModel.findOne({ title });
+        const existingCourse = await courseModel.findOne({ adminId, title });
 
         if (existingCourse) {
-            return res.status(400).json({
+            return res.status(201).json({
                 message: "A course with this title already exists."
             });
         }
@@ -108,7 +108,7 @@ adminRouter.post("/couser", adminMiddleware, async (req, res) => {
             creatorId: adminId
         });
 
-        res.status(201).json({
+        res.status(200).json({
             message: "Course created successfully",
             courseId: course._id
         });
@@ -120,9 +120,68 @@ adminRouter.post("/couser", adminMiddleware, async (req, res) => {
 
 });
 
-adminRouter.put("/couser", adminMiddleware, (req, res) => { });
+adminRouter.put("/couser", adminMiddleware, async (req, res) => {
+    const adminId = req.adminid;
 
-adminRouter.get("/couser", (req, res) => { });
+    const { title, description, imageUrl, price, courseId } = req.body;
+
+    try {
+        const existingCourse = await courseModel.findOne({
+            creatorId: adminId,
+            courseId: courseId
+        });
+
+        if (!existingCourse) {
+            return res.json({
+                message: "Course does not exits with this admin"
+            })
+        }
+
+        await courseModel.updateOne({
+            id: courseId,
+            creatorId: adminId
+        }, {
+            title,
+            description,
+            imageUrl,
+            price,
+        })
+
+        return res.json({
+            message: "Couser Updated",
+        })
+
+    } catch (error) {
+        console.error("Error creating course:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+adminRouter.get("/couser", adminMiddleware, async (req, res) => {
+    const adminId = req.adminid;
+    try {
+        const cousers = await courseModel.find({
+            creatorId: adminId
+        })
+
+        if (cousers.length === 0) {
+            return res.json({
+                message: "There are no cousers create one"
+            })
+        }
+        else {
+            return res.json({
+                message: "All the cousers are listed below",
+                cousers
+            })
+        }
+
+    } catch (error) {
+        console.log("Server Error muskan madam", error)
+        res.status(500).json({ message: "Server error" });
+    }
+
+});
 
 module.exports = {
     adminRouter,
