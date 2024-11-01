@@ -2,8 +2,9 @@ const express = require("express");
 const zod = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { userModel } = require("../db");
+const { userModel, purchaseModel, courseModel } = require("../db");
 const { JWT_USER_PASSWORD } = require("../config");
+const { userMiddleware } = require("../middleware/user");
 
 
 const Router = express.Router;
@@ -94,7 +95,28 @@ userRouter.post("/signin", async (req, res) => {
     }
 });
 
-userRouter.get("/purchases", (req, res) => { });
+userRouter.get("/purchases", userMiddleware, async (req, res) => {
+    const userId = req.userid;
+
+    const purchases = await purchaseModel.find({
+        userId
+    })
+
+    if (!purchases) {
+        return res.json({
+            message: "No courses purchased by you"
+        })
+    }
+
+    const coursesData = await courseModel.find({
+        _id: { $in: purchases.map(x => x.courseId) }
+    })
+
+    res.json({
+        purchases,
+        coursesData
+    })
+});
 
 module.exports = {
     userRouter,
